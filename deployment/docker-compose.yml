@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+  api:
+    container_name: astrology_api
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile
+      target: api
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./config/.env
+    depends_on:
+      - postgres
+      - migrate
+  
+  collector:
+    container_name: astrology_collector
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile
+      target: collector
+    restart: always
+    env_file:
+      - ./config/.env
+    depends_on:
+      - postgres
+      - migrate
+
+  migrate:
+    container_name: astrology_migrate
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile
+      target: migrate
+    env_file:
+      - ./config/.env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14-alpine
+    container_name: astrology_postgres
+    restart: always
+    ports:
+      - "5433:5432"
+    env_file:
+      - ./config/.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

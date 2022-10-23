@@ -1,0 +1,12 @@
+BEGIN;
+
+-- TABLES --
+
+CREATE TABLE IF NOT EXISTS images (
+    title TEXT UNIQUE NOT NULL,
+    date TEXT NOT NULL,
+    url TEXT UNIQUE NOT NULL,
+    data BYTEA NOT NULL
+);
+
+COMMIT;
